@@ -12,11 +12,7 @@ document.body.addEventListener("click", function (e) {
   makeCircleAnimation(e);
 });
 
-// document.body.addEventListener("mousemove", function (e) {
-//   makeCircleAnimation(e);
-// });
-
-document.body.addEventListener("touchstart", function (e) {
+document.body.addEventListener("mousemove", function (e) {
   makeCircleAnimation(e);
 });
 
@@ -56,17 +52,17 @@ function Circle(x, y, r, dx, dy, color) {
 }
 
 function makeCircleAnimation(e) {
-  let x = e.x;
-  if (e.x + 50 >= innerWidth) {
+  let x = e.x || e.touches[0].clientX;
+  if (x + 50 >= innerWidth) {
     x = innerWidth - 51;
-  } else if (e.x - 50 <= 0) {
+  } else if (x - 50 <= 0) {
     x = 51;
   }
 
-  let y = e.y;
-  if (e.y + 50 >= innerHeight) {
+  let y = e.y || touches[0].clientY;
+  if (y + 50 >= innerHeight) {
     y = innerHeight - 51;
-  } else if (e.y - 50 <= 0) {
+  } else if (y - 50 <= 0) {
     y = 51;
   }
 
