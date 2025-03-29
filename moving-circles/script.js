@@ -1,9 +1,30 @@
 const canvas = document.getElementById("my-canvas");
+const c = canvas.getContext("2d");
+let circles = [];
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const c = canvas.getContext("2d");
+animate();
 
+// Event Listeners
+document.body.addEventListener("click", function (e) {
+  makeCircleAnimation(e);
+});
+
+// document.body.addEventListener("mousemove", function (e) {
+//   makeCircleAnimation(e);
+// });
+
+document.body.addEventListener("touchstart", function (e) {
+  makeCircleAnimation(e);
+});
+
+document.body.addEventListener("touchmove", function (e) {
+  makeCircleAnimation(e);
+});
+
+// Functions
 function Circle(x, y, r, dx, dy, color) {
   this.x = x;
   this.y = y;
@@ -34,7 +55,30 @@ function Circle(x, y, r, dx, dy, color) {
   };
 }
 
-let circles = [];
+function makeCircleAnimation(e) {
+  let x = e.x;
+  if (e.x + 50 >= innerWidth) {
+    x = innerWidth - 51;
+  } else if (e.x - 50 <= 0) {
+    x = 51;
+  }
+
+  let y = e.y;
+  if (e.y + 50 >= innerHeight) {
+    y = innerHeight - 51;
+  } else if (e.y - 50 <= 0) {
+    y = 51;
+  }
+
+  let d = [4, -4][Math.floor(Math.random() * 2)];
+
+  let r = Math.floor(Math.random() * 255);
+  let g = Math.floor(Math.random() * 255);
+  let b = Math.floor(Math.random() * 255);
+  let color = `rgb(${r},${g},${b})`;
+
+  circles.push(new Circle(x, y, 50, d, d, color));
+}
 
 function animate() {
   requestAnimationFrame(animate);
@@ -44,61 +88,3 @@ function animate() {
     circles[i].update();
   }
 }
-
-animate();
-
-document.body.addEventListener("touchmove", function (e) {
-  // let x = Math.random() * (innerWidth - 50 * 2) + 50;
-  // let y = Math.random() * (innerHeight - 50 * 2) + 50;
-
-  let x = e.x;
-  if (e.x + 50 >= innerWidth) {
-    x = innerWidth - 51;
-  } else if (e.x - 50 <= 0) {
-    x = 51;
-  }
-
-  let y = e.y;
-  if (e.y + 50 >= innerHeight) {
-    y = innerHeight - 51;
-  } else if (e.y - 50 <= 0) {
-    y = 51;
-  }
-
-  let d = [4, -4][Math.floor(Math.random() * 2)];
-
-  let r = Math.floor(Math.random() * 255);
-  let g = Math.floor(Math.random() * 255);
-  let b = Math.floor(Math.random() * 255);
-  let color = `rgb(${r},${g},${b})`;
-
-  circles.push(new Circle(x, y, 50, d, d, color));
-});
-
-document.body.addEventListener("mousemove", function (e) {
-  // let x = Math.random() * (innerWidth - 50 * 2) + 50;
-  // let y = Math.random() * (innerHeight - 50 * 2) + 50;
-
-  let x = e.x;
-  if (e.x + 50 >= innerWidth) {
-    x = innerWidth - 51;
-  } else if (e.x - 50 <= 0) {
-    x = 51;
-  }
-
-  let y = e.y;
-  if (e.y + 50 >= innerHeight) {
-    y = innerHeight - 51;
-  } else if (e.y - 50 <= 0) {
-    y = 51;
-  }
-
-  let d = [4, -4][Math.floor(Math.random() * 2)];
-
-  let r = Math.floor(Math.random() * 255);
-  let g = Math.floor(Math.random() * 255);
-  let b = Math.floor(Math.random() * 255);
-  let color = `rgb(${r},${g},${b})`;
-
-  circles.push(new Circle(x, y, 50, d, d, color));
-});
