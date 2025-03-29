@@ -1,6 +1,7 @@
 const canvas = document.getElementById("my-canvas");
 const c = canvas.getContext("2d");
-let circles = [];
+let arrOfCircles = [];
+let counter = 0;
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -13,7 +14,8 @@ document.body.addEventListener("click", function (e) {
 });
 
 document.body.addEventListener("mousemove", function (e) {
-  makeCircleAnimation(e);
+  if (counter % 8 == 0) makeCircleAnimation(e);
+  counter++;
 });
 
 document.body.addEventListener("touchmove", function (e) {
@@ -21,66 +23,69 @@ document.body.addEventListener("touchmove", function (e) {
 });
 
 // Functions
-function Circle(x, y, r, dx, dy, color) {
-  this.x = x;
-  this.y = y;
-  this.r = r;
-  this.dx = dx;
-  this.dy = dy;
-  this.color = color;
+class Circle {
+  constructor(x, y, r, dx, dy, color) {
+    this.x = x;
+    this.y = y;
+    this.r = r;
+    this.dx = dx;
+    this.dy = dy;
+    this.color = color;
 
-  this.draw = function () {
-    c.fillStyle = color;
-    c.beginPath();
-    c.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    c.fill();
-    c.stroke();
-  };
+    this.draw = function () {
+      c.fillStyle = color;
+      c.beginPath();
+      c.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      c.fill();
+      c.stroke();
+    };
 
-  this.update = function () {
-    if (this.x + this.r >= innerWidth || this.x - this.r <= 0) {
-      this.dx = -this.dx;
-    } else if (this.y + this.r >= innerHeight || this.y - this.r <= 0) {
-      this.dy = -this.dy;
-    }
+    this.update = function () {
+      if (this.x + this.r >= innerWidth || this.x - this.r <= 0) {
+        this.dx = -this.dx;
+      } else if (this.y + this.r >= innerHeight || this.y - this.r <= 0) {
+        this.dy = -this.dy;
+      }
 
-    this.x += this.dx;
-    this.y += this.dy;
+      this.x += this.dx;
+      this.y += this.dy;
 
-    this.draw();
-  };
+      this.draw();
+    };
+  }
 }
 
 function makeCircleAnimation(e) {
+  let radius = 50;
   let x = e.x || e.touches[0].clientX;
-  if (x + 50 >= innerWidth) {
-    x = innerWidth - 51;
-  } else if (x - 50 <= 0) {
-    x = 51;
-  }
-
   let y = e.y || touches[0].clientY;
-  if (y + 50 >= innerHeight) {
-    y = innerHeight - 51;
-  } else if (y - 50 <= 0) {
-    y = 51;
+  let direction = [4, -4][Math.floor(Math.random() * 2)];
+  let color = `rgb(
+  ${Math.floor(Math.random() * 255)},
+  ${Math.floor(Math.random() * 255)},
+  ${Math.floor(Math.random() * 255)}
+  )`;
+
+  if (x + radius >= innerWidth) {
+    x = innerWidth - radius + 1;
+  } else if (x - radius <= 0) {
+    x = radius + 1;
   }
 
-  let d = [4, -4][Math.floor(Math.random() * 2)];
+  if (y + radius >= innerHeight) {
+    y = innerHeight - radius + 1;
+  } else if (y - radius <= 0) {
+    y = radius + 1;
+  }
 
-  let r = Math.floor(Math.random() * 255);
-  let g = Math.floor(Math.random() * 255);
-  let b = Math.floor(Math.random() * 255);
-  let color = `rgb(${r},${g},${b})`;
-
-  circles.push(new Circle(x, y, 50, d, d, color));
+  arrOfCircles.push(new Circle(x, y, radius, direction, direction, color));
 }
 
 function animate() {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-  for (let i = 0; i < circles.length; i++) {
-    circles[i].update();
-  }
+  arrOfCircles.forEach((circle) => {
+    circle.update();
+  });
 }
